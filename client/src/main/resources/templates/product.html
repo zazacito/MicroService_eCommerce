@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css} "/>
+</head>
+<body>
+<div class="container">
+    <img th:src="${product.illustration}"  class="card-img-top" />
+    <p th:text= "${product.name}"></p>
+</div>
+</body>
+</html>
