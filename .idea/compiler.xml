@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="cart" target="1.8" />
+      <module name="cart.main" target="1.8" />
+      <module name="cart.test" target="1.8" />
+      <module name="client" target="1.8" />
+      <module name="client.main" target="1.8" />
+      <module name="client.test" target="1.8" />
+      <module name="product" target="1.8" />
+      <module name="product.main" target="1.8" />
+      <module name="product.test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
