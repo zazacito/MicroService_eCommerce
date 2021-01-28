@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface MsCartProxy {
 
     @PostMapping(value = "/cart")
-    public ResponseEntity<CartBean> createNewCart();
+    public ResponseEntity<CartBean> createNewCart(@RequestBody CartBean cartData);
 
     @GetMapping(value = "/cart/{id}")
     public Optional<CartBean> getCart(@PathVariable Long id);
