@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -9,41 +9,25 @@
 </head>
 <body>
 <header class=" containerNav text_white blue_background">
-    <h1> Détails Ad </h1>
+    <h1> Mon panier</h1>
     <div class="itemCart cartContainer">
         <div> Mon Panier <span th:text="|${cart.id}|"> </span>  </div>
         <span class="alignRight"> <i class="fa fa-shopping-cart"></i> <span th:text="|${cartSize}|"> </span> </div>
     </div>
+
+
 </header>
 <div class="contents">
     <div class="containerNav text_white blue_background">
         <div class="itemNav ">All Ads</div>
         <div class="itemNav ">My Ads</div>
     </div>
-    <div class="container">
 
-        <div class="card mb-1 mt-1">
-            <img class="card-img-top" height="70%" th:src="${product.illustration}" width="80%"/>
-            <div class="card-body">
-                <h5 class="card-title"><p th:text="${product.name}"></p></h5>
-                <p class="card-text" th:text="${product.description}"></p>
-                <div class="containerDetailsAd">
-                    <div class="text_gray pt"> 1 Hour Ago</div>
-                    <div class="price descriptionTitle"><p th:text="${product.price}"></p></div>
-                </div>
-
-                <button type="button" class="btn btn-primary"> <a class="text-white" th:href="@{|/cart/${cart.id}/add-product/${product.id}|}" >Ajouter au Panier </a></button>
-
-            </div>
-        </div>
-    </div>
 
 </div>
-<br>
-<footer class="footer blue_background text_white">
+<footer class="footer blue_background mt-1 text_white">
     All Rights Reserved to Etienne Le Bolideur
 </footer>
 
 </body>
-
 </html>
