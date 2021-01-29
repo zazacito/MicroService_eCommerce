@@ -2,18 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cart</title>
+    <title>Order</title>
     <link th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css} " th:rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link th:href="@{/styles/main.css}" rel="stylesheet" />
 </head>
 <body>
 <header class=" containerNav text_white blue_background">
-    <h1> Mon panier</h1>
-    <div class="itemCart cartContainer">
-        <div> Mon Panier <span th:text="|${cart.id}|"> </span>  </div>
-        <span class="alignRight"> <i class="fa fa-shopping-cart"></i> <span th:text="|${cartSize}|"> </span></span> </div>
-    </div>
+    <h1> Ma commande</h1>
 
 
 </header>
@@ -25,16 +21,18 @@
     <div class="container">
         <div class="card mt-2">
             <div class="card-header">
-                Récapitulatif Panier
+                Récapitulatif Commande
             </div>
             <div class="card-body">
-                <h5 class="card-title">Cout total: <span th:text="${total}"></span> $</h5>
-                <p class="card-text">Nombre de produits: <span th:text="${quantity}"></span>  </p>
-                <button type="button" class="btn btn-primary"> <a class="text-white" th:href="@{|/cart/${cart.id}/placeOrder|}" >Place Order </a></button>
+
+                <p class="card-text">Votre commande a été placée avec succès.  </p>
+                <button type="button" class="btn btn-primary"> <a class="text-white" th:href="@{|/|}" > Faire d'autres achats </a></button>
             </div>
         </div>
 
     </div>
+
+
 
 
 </div>

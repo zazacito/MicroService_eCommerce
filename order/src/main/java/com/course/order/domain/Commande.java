@@ -5,18 +5,18 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Order {
+public class Commande {
     @Id
     @GeneratedValue
     private Long id;
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderItem> orders;
-    private Double total;
+    private Double total = 00.0;
 
-    public Order() {
+    public Commande() {
     }
 
-    public Order(Long id, List<OrderItem> orders, Double total) {
+    public Commande(Long id, List<OrderItem> orders, Double total) {
         this.id = id;
         this.orders = orders;
         this.total = total;
@@ -62,5 +62,6 @@ public class Order {
     }
     public void addOrderItem ( OrderItem orderItem ){
         this.orders.add(orderItem);
-        this.total += orderItem.getPrice()* orderItem.getQuantity();    }
+        this.total += orderItem.getPrice()* orderItem.getQuantity();
+    }
 }

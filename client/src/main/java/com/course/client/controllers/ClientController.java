@@ -1,6 +1,5 @@
 package com.course.client.controllers;
 
-import ch.qos.logback.classic.Level;
 import com.course.client.beans.*;
 import com.course.client.proxies.MsCartProxy;
 import com.course.client.proxies.MsOrderProxy;
@@ -13,9 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class ClientController {
@@ -44,10 +41,6 @@ public class ClientController {
         model.addAttribute("cart", cartBeanInstance.getBody());
         System.out.println("Cart Créé :" + cartBeanInstance.getBody());
 
-        //Création Order de Session
-        ResponseEntity<OrderBean> orderBeanInstance = msOrderProxy.createNewOrder();
-        model.addAttribute("order", orderBeanInstance.getBody());
-        System.out.println("Order Créé :" + orderBeanInstance.getBody());
 
 
         return "redirect:/index/cart/" + cartBeanInstance.getBody().getId();
@@ -126,19 +119,6 @@ public class ClientController {
         // Ajout CartItem to Cart
         msCartProxy.addProductToCart(cartId,cartItemBean);
 
-        // Récupérer Order et vérifier Existence Order
-        Optional <OrderBean> order = msOrderProxy.getOrder(cartId);
-
-        if (! order.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't get order");
-
-        // Création OrderItem
-        OrderItemBean orderItemBean = new OrderItemBean();
-        orderItemBean.setProductId(productId);
-        orderItemBean.setQuantity(1);
-
-        // Ajout OrderItem to Order
-        msOrderProxy.addOrderItemToOrder(cartId, orderItemBean);
 
         // Redirection Accueil
         List<ProductBean> products =  msProductProxy.list();
@@ -163,7 +143,6 @@ public class ClientController {
     @RequestMapping("/cart/{cartId}/detailsCart")
     public String addProduct (Model model, @PathVariable Long cartId){
         Optional<CartBean> cart =  msCartProxy.getCart(cartId);
-        Optional<OrderBean> order = msOrderProxy.getOrder(cartId);
         int cartSize;
         if (cart.get().getProducts().size() == 0){
             cartSize = 0;
@@ -174,21 +153,54 @@ public class ClientController {
         model.addAttribute("cartSize", cartSize);
         System.out.println("Nombre Produit Panier: " + cartSize);
 
+        double total =0;
+        int totalQuantity = 0;
+        for (CartItemBean cartItem: cart.get().getProducts()){
+            double quantity = cartItem.getQuantity();
+            Optional<ProductBean> product = msProductProxy.get(cartItem.getProductId());
+            double price = product.get().getPrice();
+            totalQuantity += quantity;
+            total += quantity * price;
+        }
+
+        System.out.println("Total:" + total);
+        model.addAttribute("total", total);
+        model.addAttribute("quantity", totalQuantity);
+
         //Ajout Cart au variable de Session
         model.addAttribute("cart", cart.get());
-        model.addAttribute("order", order.get());
         return "cart";
     }
 
-    @PostMapping("/placeOrder/{idOrder}/{id}")
-    public String placeOrder(Model model, @PathVariable Long idOrder,@PathVariable Long id){
+    @RequestMapping("/cart/{cartId}/placeOrder")
+    public String placeOrder(Model model, @PathVariable Long cartId){
 
-        Optional<OrderBean> orderBeanInstance = msOrderProxy.getOrder(idOrder);
-        Optional<CartBean> cartBeanInstance = msCartProxy.getCart(id);
-        cartBeanInstance.get().removeCart();
-        model.addAttribute("cart",cartBeanInstance.get() );
-        model.addAttribute("order",orderBeanInstance.get());
-        return "index";
+        //Création Order de Session
+        ResponseEntity<OrderBean> orderBeanInstance = msOrderProxy.createNewOrder();
+        System.out.println("Order Créé :" + orderBeanInstance.getBody().getId());
+        // Récupération Cart
+        Optional<CartBean> cart =  msCartProxy.getCart(cartId);
+        System.out.println(cart.get().getProducts());
+
+        // Copie Cart Dans Order
+
+        for (CartItemBean cartItem: cart.get().getProducts()){
+
+            Optional<ProductBean> product = msProductProxy.get(cartItem.getProductId());
+
+            OrderItemBean orderItem = new OrderItemBean( product.get().getId(), cartItem.getQuantity(),
+                    product.get().getIllustration(), product.get().getIllustration(), product.get().getPrice());
+
+            msOrderProxy.addOrderItemToOrder(orderBeanInstance.getBody().getId(), orderItem);
+            
+        }
+        // Suppression Cart
+        cart.get().removeCart();
+
+
+        System.out.println("Order" + orderBeanInstance.getBody().toString() );
+        System.out.println("Order Placed");
+        return "order";
     }
 
 }

@@ -1,7 +1,7 @@
 package com.course.order.controllers;
 
 
-import com.course.order.domain.Order;
+import com.course.order.domain.Commande;
 import com.course.order.domain.OrderItem;
 import com.course.order.repositories.OrderItemRepository;
 import com.course.order.repositories.OrderRepository;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,22 +25,22 @@ public class OrderController {
 
 
     @PostMapping(value = "/order")
-    public ResponseEntity<Order> createNewOrder()
+    public ResponseEntity<Commande> createNewOrder()
     {
-        Order order = orderRepository.save(new Order());
+        Commande commande = orderRepository.save(new Commande());
 
-        if (order == null)
+        if (commande == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Couldn't create a new order");
 
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        return new ResponseEntity<>(commande, HttpStatus.CREATED);
 
 
     }
 
     @GetMapping(value = "/order/{id}")
-    public Optional<Order> getOrder(@PathVariable Long id){
+    public Optional<Commande> getOrder(@PathVariable Long id){
 
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Commande> order = orderRepository.findById(id);
 
         if (order == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -50,18 +49,19 @@ public class OrderController {
 
     }
 
+
     @PostMapping(value = "/order/{id}")
     @Transactional
     public ResponseEntity<OrderItem> addOrderItemToOrder(@PathVariable Long id, @RequestBody OrderItem orderItem){
 
-        Order order = orderRepository.getOne(id);
+        Commande commande = orderRepository.getOne(id);
 
-        if (order == null)
+        if (commande == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Couldn't get cart");
 
-        order.addOrderItem(orderItem);
+        commande.addOrderItem(orderItem);
 
-        orderRepository.save(order);
+        orderRepository.save(commande);
 
         return new ResponseEntity<OrderItem>(orderItem, HttpStatus.CREATED);
 
